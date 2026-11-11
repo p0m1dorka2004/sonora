@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="InkBrush" Color="#F2F0E8"/>
+    <SolidColorBrush x:Key="InkSoftBrush" Color="#CBD4CF"/>
+    <SolidColorBrush x:Key="MutedBrush" Color="#97A49D"/>
+    <SolidColorBrush x:Key="FaintBrush" Color="#76837D"/>
+
+    <SolidColorBrush x:Key="CanvasBrush" Color="#0F1513"/>
+    <SolidColorBrush x:Key="RailBrush" Color="#111A17"/>
+    <SolidColorBrush x:Key="TopBarBrush" Color="#121B18"/>
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#18231F"/>
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="#1E2A26"/>
+    <SolidColorBrush x:Key="LineBrush" Color="#2A3732"/>
+    <SolidColorBrush x:Key="LineStrongBrush" Color="#3B4B45"/>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#79C4AF"/>
+    <SolidColorBrush x:Key="AccentDeepBrush" Color="#93D8C4"/>
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#1E3A32"/>
+    <SolidColorBrush x:Key="AccentTintBrush" Color="#162620"/>
+    <SolidColorBrush x:Key="MintBrush" Color="#8CCBB7"/>
+    <SolidColorBrush x:Key="GreenDotBrush" Color="#62C4A1"/>
+
+    <SolidColorBrush x:Key="DangerBrush" Color="#E28A80"/>
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#3A211F"/>
+    <SolidColorBrush x:Key="AmberBrush" Color="#E3B36C"/>
+    <SolidColorBrush x:Key="AmberSoftBrush" Color="#322718"/>
+
+    <LinearGradientBrush x:Key="HeroBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#15231F" Offset="0"/>
+        <GradientStop Color="#1B2C26" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="HeroLineBrush" Color="#1FFFFFFF"/>
+    <SolidColorBrush x:Key="HeroTextBrush" Color="#F6F3EA"/>
+    <SolidColorBrush x:Key="HeroMutedBrush" Color="#A9C2B9"/>
+    <SolidColorBrush x:Key="HeroFaintBrush" Color="#76938A"/>
+    <SolidColorBrush x:Key="HeroChipBrush" Color="#14FFFFFF"/>
+
+    <SolidColorBrush x:Key="FieldFocusBrush" Color="#1B2823"/>
+    <SolidColorBrush x:Key="HoverSubtleBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="NavHoverBrush" Color="#12FFFFFF"/>
+    <SolidColorBrush x:Key="NavBadgeBrush" Color="#1AFFFFFF"/>
+    <SolidColorBrush x:Key="TrackBrush" Color="#2A3833"/>
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#3A4A43"/>
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#566B62"/>
+    <SolidColorBrush x:Key="OnAccentBrush" Color="#0C1B16"/>
+    <SolidColorBrush x:Key="PrimaryPressedBrush" Color="#A8E3CF"/>
+    <SolidColorBrush x:Key="ToolTipBackgroundBrush" Color="#24322D"/>
+    <SolidColorBrush x:Key="BrandMarkBrush" Color="#22312B"/>
+
+    <SolidColorBrush x:Key="PillAccentBorderBrush" Color="#2E5A4D"/>
+    <SolidColorBrush x:Key="PillAmberBorderBrush" Color="#5A482B"/>
+    <SolidColorBrush x:Key="PillDangerBorderBrush" Color="#5D3632"/>
+
+</ResourceDictionary>

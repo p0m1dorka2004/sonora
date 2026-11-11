@@ -1,0 +1,1279 @@
+﻿<Window x:Class="vkr.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SONORA — голосовой протокол УЗИ"
+        Icon="/Assets/app.ico"
+        Width="1460" Height="940"
+        MinWidth="1320" MinHeight="690"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="{DynamicResource CanvasBrush}"
+        FontFamily="{StaticResource UiFont}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
+        KeyDown="Window_KeyDown"
+        StateChanged="Window_StateChanged">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="6"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <Style x:Key="FieldCell" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="11,8,11,8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource LineStrongBrush}"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource FieldFocusBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SectionCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="RootBorder" Background="{DynamicResource CanvasBrush}">
+        <Grid x:Name="RootGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="58"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="236"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="356"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ====================  ВЕРХНЯЯ ПАНЕЛЬ  ==================== -->
+            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource TopBarBrush}"
+                    BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="236"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Логотип -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <Border Width="32" Height="32" CornerRadius="9" Background="{DynamicResource BrandMarkBrush}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border Width="2.5" Height="8" CornerRadius="1.25" Background="{DynamicResource MintBrush}" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                <Border Width="2.5" Height="14" CornerRadius="1.25" Background="#F4F1EA" Margin="0,0,2,0"/>
+                                <Border Width="2.5" Height="10" CornerRadius="1.25" Background="{DynamicResource MintBrush}"/>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="S O N O R A" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource InkBrush}"/>
+                            <TextBlock Text="ГОЛОСОВОЙ ПРОТОКОЛ УЗИ" FontSize="7.5" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Поиск -->
+                    <Border Grid.Column="1" Height="34" Width="420" MaxWidth="420"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Background="{DynamicResource SurfaceBrush}"
+                            BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" CornerRadius="8">
+                        <Grid>
+                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE721;" FontSize="12"
+                                       Foreground="{DynamicResource FaintBrush}" HorizontalAlignment="Left"
+                                       Margin="12,0,0,0" IsHitTestVisible="False"/>
+                            <TextBox x:Name="SearchBox" Style="{StaticResource SearchTextBox}"
+                                     Tag="Поиск по протоколам и пациентам"
+                                     KeyDown="SearchBox_KeyDown" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Правая часть -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
+                        <Border Style="{StaticResource PillAccent}" Margin="0,0,14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource GreenDotBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Локально · офлайн" Style="{StaticResource PillTextAccent}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Width="1" Height="22" Background="{DynamicResource LineBrush}" Margin="0,0,14,0"/>
+
+                        <Button Style="{StaticResource GhostButton}" Padding="6,0" Height="38" Click="Stub_Click" Tag="Профиль врача"
+                                ToolTip="Профиль и настройки врача">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="28" Height="28" CornerRadius="14" Background="{DynamicResource AccentSoftBrush}">
+                                    <TextBlock Text="АК" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Margin="9,0,10,0" VerticalAlignment="Center">
+                                    <TextBlock Text="Ковалёва А. И." FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource InkBrush}"/>
+                                    <TextBlock Text="врач УЗД" FontSize="9" Foreground="{DynamicResource MutedBrush}" Margin="0,1,0,0"/>
+                                </StackPanel>
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE70D;" FontSize="8" Foreground="{DynamicResource FaintBrush}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Border Width="1" Height="22" Background="{DynamicResource LineBrush}" Margin="14,0,8,0"/>
+
+                        <Button Style="{StaticResource CaptionButton}" Click="Minimize_Click" ToolTip="Свернуть">
+                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE921;" FontSize="9"/>
+                        </Button>
+                        <Button Style="{StaticResource CaptionButton}" Click="Maximize_Click" ToolTip="Развернуть">
+                            <TextBlock x:Name="MaximizeGlyph" Style="{StaticResource Glyph}" Text="&#xE922;" FontSize="9"/>
+                        </Button>
+                        <Button Style="{StaticResource CloseCaptionButton}" Click="Close_Click" ToolTip="Закрыть">
+                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE8BB;" FontSize="9"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ====================  ЛЕВАЯ НАВИГАЦИЯ  ==================== -->
+            <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="0"
+                    Background="{DynamicResource RailBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="14,16,14,0">
+                        <Button Style="{StaticResource SecondaryButton}" Height="36" Click="NewProtocol_Click"
+                                ToolTip="Создать новый протокол исследования">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE710;" FontSize="11" Margin="0,0,7,0"
+                                           Foreground="{DynamicResource AccentBrush}"/>
+                                <TextBlock Text="Новый протокол" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Text="РАБОЧЕЕ МЕСТО" Style="{StaticResource Caption}" Margin="10,24,0,7"/>
+
+                        <Button Style="{StaticResource NavButtonActive}" Click="Protocol_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE8A5;" FontSize="14"
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Протокол" VerticalAlignment="Center"/>
+                                <Border Margin="8,0,0,0" Padding="5,0" CornerRadius="8" Background="{DynamicResource NavBadgeBrush}">
+                                    <TextBlock Text="УЗИ" FontSize="7.5" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource NavButton}" Click="Stub_Click" Tag="Мои исследования">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE8B7;" FontSize="14"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Мои исследования" VerticalAlignment="Center"/>
+                                <TextBlock Text="128" FontSize="9" Foreground="{DynamicResource FaintBrush}"
+                                           Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource NavButton}" Click="Stub_Click" Tag="Шаблоны протоколов">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE7C3;" FontSize="14"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Шаблоны протоколов" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Text="СПРАВОЧНИКИ" Style="{StaticResource Caption}" Margin="10,22,0,7"/>
+
+                        <Button Style="{StaticResource NavButton}" Click="Stub_Click" Tag="Словарь терминов">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE8F1;" FontSize="14"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Словарь терминов" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource NavButton}" Click="Stub_Click" Tag="Голосовые команды">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE720;" FontSize="14"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Голосовые команды" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="14,0,14,14">
+                        <Border Style="{StaticResource Card}" CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="26" Height="26" CornerRadius="7" Background="{DynamicResource AccentSoftBrush}">
+                                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE720;" FontSize="11"
+                                                       Foreground="{DynamicResource AccentBrush}"/>
+                                        </Border>
+                                        <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="МИКРОФОН" Style="{StaticResource Caption}" FontSize="8"/>
+                                            <TextBlock Text="AT2020 USB" FontSize="10.5" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource InkBrush}" Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource IconButton}" Width="24" Height="24"
+                                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                                            Click="Stub_Click" Tag="Настройки микрофона" ToolTip="Настроить микрофон">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE713;" FontSize="10"/>
+                                    </Button>
+                                </Grid>
+                                <Grid Height="3" Margin="0,10,0,0">
+                                    <Border Background="{DynamicResource TrackBrush}" CornerRadius="1.5"/>
+                                    <Border x:Name="RailLevelFill" Width="58" Background="{DynamicResource AccentBrush}"
+                                            CornerRadius="1.5" HorizontalAlignment="Left"/>
+                                </Grid>
+                                <Grid Margin="0,5,0,0">
+                                    <TextBlock Text="Уровень сигнала" FontSize="8.5" Foreground="{DynamicResource FaintBrush}"/>
+                                    <TextBlock Text="−32 дБ" FontSize="8.5" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Grid Height="34" Margin="0,4,0,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE708;" FontSize="12"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="10,0,9,0"/>
+                                <TextBlock Text="Тёмная тема" FontSize="11.5" Foreground="{DynamicResource InkSoftBrush}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <ToggleButton x:Name="ThemeToggle" Style="{StaticResource ThemeSwitch}"
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"
+                                          ToolTip="Переключить тёмное оформление"
+                                          AutomationProperties.Name="Тёмная тема"/>
+                        </Grid>
+
+                        <Button Style="{StaticResource NavButton}" Click="Stub_Click" Tag="Настройки приложения">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE713;" FontSize="13"
+                                           Foreground="{DynamicResource MutedBrush}" Margin="0,0,10,0"/>
+                                <TextBlock Text="Настройки" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Text="SONORA 0.9 · прототип интерфейса" FontSize="8.5"
+                                   Foreground="{DynamicResource FaintBrush}" Margin="10,6,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ====================  ОСНОВНАЯ ОБЛАСТЬ  ==================== -->
+            <ScrollViewer x:Name="MainScroll" Grid.Row="1" Grid.Column="1"
+                          Style="{StaticResource CleanScrollViewer}"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="26,22,20,26">
+
+                    <!-- Заголовок страницы -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ИССЛЕДОВАНИЯ" Style="{StaticResource Caption}" FontSize="9"/>
+                                <TextBlock Text="/" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="7,0"/>
+                                <TextBlock Text="УЗИ-2026-0417" FontSize="9" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource AccentBrush}"/>
+                            </StackPanel>
+                            <TextBlock Text="Протокол УЗИ органов брюшной полости" Style="{StaticResource PageTitle}" Margin="0,6,0,6"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource PillAmber}" Padding="7,2" Margin="0,0,9,0">
+                                    <TextBlock Text="Черновик" Style="{StaticResource PillTextAmber}"/>
+                                </Border>
+                                <TextBlock Text="Создан сегодня в 12:04 · д-р Ковалёва А. И. · аппарат Mindray DC-70"
+                                           FontSize="10" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,4,0,0">
+                            <Button Style="{StaticResource IconButton}" Click="Stub_Click" Tag="Вложения"
+                                    ToolTip="Прикрепить изображения или документы" Margin="0,0,2,0">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE723;" FontSize="14"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Click="Print_Click"
+                                    ToolTip="Печать протокола" Margin="0,0,8,0">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE749;" FontSize="14"/>
+                            </Button>
+                            <Button Style="{StaticResource SecondaryButton}" Click="Export_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource Glyph}" Text="&#xE8A5;" FontSize="12"
+                                               Foreground="{DynamicResource AccentBrush}" Margin="0,0,7,0"/>
+                                    <TextBlock Text="Экспорт PDF" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Карточка пациента -->
+                    <Border Style="{StaticResource Card}" Padding="18,14,18,14" Margin="0,0,0,14">
+                        <StackPanel>
+                            <Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="34" Height="34" CornerRadius="17" Background="{DynamicResource AccentSoftBrush}">
+                                        <TextBlock Text="ИА" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource AccentBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Иванова Анна Сергеевна" FontSize="15.5" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource InkBrush}"/>
+                                            <TextBlock Text="38 лет · женский" FontSize="10.5" Foreground="{DynamicResource MutedBrush}"
+                                                       Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock Text="Амбулаторное исследование · направление № 0417-11"
+                                                   FontSize="9.5" Foreground="{DynamicResource FaintBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Button Style="{StaticResource GhostButton}" Height="30" HorizontalAlignment="Right"
+                                        VerticalAlignment="Center" Click="PatientEdit_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE70F;" FontSize="11"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Изменить данные" FontSize="10.5" Foreground="{DynamicResource AccentBrush}"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <Border Style="{StaticResource Divider}" Margin="0,13,0,11"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.15*"/>
+                                    <ColumnDefinition Width="1.35*"/>
+                                    <ColumnDefinition Width="1.1*"/>
+                                    <ColumnDefinition Width="1.05*"/>
+                                    <ColumnDefinition Width="1.15*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="ДАТА РОЖДЕНИЯ" Style="{StaticResource MetaLabel}"/>
+                                    <TextBlock Text="14.03.1988" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                </StackPanel>
+
+                                <Border Grid.Column="1" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0" Padding="14,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="НОМЕР ИССЛЕДОВАНИЯ" Style="{StaticResource MetaLabel}"/>
+                                        <TextBlock Text="УЗИ-2026-0417" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="2" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0" Padding="14,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="ДАТА И ВРЕМЯ" Style="{StaticResource MetaLabel}"/>
+                                        <TextBlock Text="12.11.2026 · 12:04" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="3" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0" Padding="14,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="ОБЛАСТЬ" Style="{StaticResource MetaLabel}"/>
+                                        <TextBlock Text="Брюшная полость" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Grid.Column="4" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0" Padding="14,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="ДАТЧИК" Style="{StaticResource MetaLabel}"/>
+                                        <TextBlock Text="Конвексный C5-1" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Блок диктовки -->
+                    <Border CornerRadius="14" Background="{DynamicResource HeroBrush}" BorderBrush="#1AFFFFFF" BorderThickness="1"
+                            Padding="20,14,20,12" Margin="0,0,0,18">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse x:Name="LiveDot" Width="6" Height="6" Fill="{DynamicResource HeroFaintBrush}"
+                                             VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                    <TextBlock Text="ДИКТОВКА" FontSize="9" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource HeroMutedBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="·  живой ввод" FontSize="9" Foreground="{DynamicResource HeroFaintBrush}" Margin="6,0,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <TextBlock Text="Русский · ru-RU" FontSize="9" Foreground="{DynamicResource HeroFaintBrush}"
+                                               VerticalAlignment="Center"/>
+                                    <Border Width="1" Height="10" Background="#26FFFFFF" Margin="10,0"/>
+                                    <Button x:Name="ModelSelectButton" Style="{StaticResource HeroSelectButton}"
+                                            Click="ModelSelect_Click" ToolTip="Выбрать модель распознавания"
+                                            AutomationProperties.Name="Модель распознавания: Compact">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="15" Height="15" CornerRadius="4" Background="#1FFFFFFF"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="AI" FontSize="6" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource HeroTextBrush}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Text="Compact" FontSize="9.5" Foreground="{DynamicResource HeroTextBrush}"
+                                                       Margin="5,0,5,0" VerticalAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE70D;" FontSize="7"
+                                                       Foreground="{DynamicResource HeroFaintBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="270"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Кнопка записи -->
+                                <Grid Grid.Column="0" Width="88" Height="88" VerticalAlignment="Center">
+                                    <Ellipse x:Name="RecordRing" Width="86" Height="86" Stroke="#88E06A5E"
+                                             StrokeThickness="1.5" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                                        <Ellipse.RenderTransform>
+                                            <ScaleTransform x:Name="RecordRingScale"/>
+                                        </Ellipse.RenderTransform>
+                                    </Ellipse>
+                                    <Border x:Name="RecordCircle" Width="68" Height="68" CornerRadius="34"
+                                            Background="#F5F2E9" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock x:Name="RecordGlyph" Style="{StaticResource Glyph}" Text="&#xE720;"
+                                                   FontSize="23" Foreground="#15231F"/>
+                                    </Border>
+                                    <Button x:Name="RecordButton" Width="88" Height="88" Click="RecordButton_Click"
+                                            Cursor="Hand" ToolTip="Начать запись (F9)">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="Transparent" CornerRadius="44"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" Margin="16,0,20,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="DictationTitle" Text="Готов к записи" FontSize="21" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource HeroTextBrush}"/>
+                                    <TextBlock x:Name="DictationHint" Text="Нажмите F9 или круглую кнопку, чтобы начать"
+                                               FontSize="11.5" Foreground="{DynamicResource HeroMutedBrush}" Margin="0,5,0,0"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                    <TextBlock Text="ДЛИТЕЛЬНОСТЬ" FontSize="8" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource HeroFaintBrush}" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="RecordTimerText" Text="00:00" FontSize="29" FontWeight="Light"
+                                               Foreground="{DynamicResource HeroTextBrush}" HorizontalAlignment="Right"
+                                               Margin="0,1,0,0" Typography.NumeralAlignment="Tabular"/>
+                                    <StackPanel x:Name="WaveformPanel" Orientation="Horizontal" Height="34"
+                                                HorizontalAlignment="Right" Margin="0,3,0,2"/>
+                                    <TextBlock x:Name="MicLevelText" Text="AT2020 USB · −32 дБ" FontSize="9"
+                                               Foreground="{DynamicResource HeroFaintBrush}" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="2" Margin="0,10,0,0">
+                                <Border Height="1" Background="#14FFFFFF" VerticalAlignment="Top" Margin="0,0,0,10"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <Border Style="{StaticResource KeycapDark}">
+                                        <TextBlock Text="F9" Style="{StaticResource KeycapTextDark}"/>
+                                    </Border>
+                                    <TextBlock Text="начать запись" FontSize="9.5" Foreground="{DynamicResource HeroFaintBrush}"
+                                               Margin="6,0,16,0" VerticalAlignment="Center"/>
+                                    <Border Style="{StaticResource KeycapDark}">
+                                        <TextBlock Text="Esc" Style="{StaticResource KeycapTextDark}"/>
+                                    </Border>
+                                    <TextBlock Text="остановить" FontSize="9.5" Foreground="{DynamicResource HeroFaintBrush}"
+                                               Margin="6,0,16,0" VerticalAlignment="Center"/>
+                                    <Border Style="{StaticResource KeycapDark}">
+                                        <TextBlock Text="Tab" Style="{StaticResource KeycapTextDark}"/>
+                                    </Border>
+                                    <TextBlock Text="следующее поле" FontSize="9.5" Foreground="{DynamicResource HeroFaintBrush}"
+                                               Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="Данные остаются на устройстве" FontSize="9"
+                                           Foreground="{DynamicResource HeroFaintBrush}" HorizontalAlignment="Right"
+                                           VerticalAlignment="Center" Margin="0,10,0,0"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Заголовок структуры -->
+                    <Grid Margin="2,0,2,9">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="СТРУКТУРА ПРОТОКОЛА" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="6 разделов · 30 показателей" FontSize="9.5"
+                                       Foreground="{DynamicResource FaintBrush}" Margin="9,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="распознано" FontSize="9" Foreground="{DynamicResource MutedBrush}" Margin="0,0,12,0"/>
+                            <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="требует проверки" FontSize="9" Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 01 Печень -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="01" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Печень" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="6 показателей" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНТУРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 99%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Ровные, чёткие"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="РАЗМЕРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 97%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="КВР 146 мм, не увеличена"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭХОГЕННОСТЬ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 98%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Средняя, однородная"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭХОСТРУКТУРА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Однородная, без очаговых изменений"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ВОРОТНАЯ ВЕНА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="11 мм, кровоток магистральный"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ВНУТРИПЕЧЁНОЧНЫЕ ПРОТОКИ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не расширены"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 02 Жёлчный пузырь -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="02" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Жёлчный пузырь" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="6 показателей" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAmber}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="2 требуют проверки" Style="{StaticResource PillTextAmber}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ФОРМА И РАЗМЕРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Грушевидная, 72 × 28 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="СТЕНКА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Уверенность 90% — проверьте значение"/>
+                                        </Grid>
+                                        <TextBox x:Name="GallbladderWallInput" Style="{StaticResource FieldInput}" Text="2 мм, не утолщена"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="СОДЕРЖИМОЕ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 97%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Анэхогенное, однородное"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНКРЕМЕНТЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 99%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не выявлены"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ХОЛЕДОХ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Уверенность 88% — проверьте значение"/>
+                                        </Grid>
+                                        <TextBox x:Name="CholedochInput" Style="{StaticResource FieldInput}" Text="4 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ПЕРИФОКАЛЬНЫЕ ТКАНИ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Без изменений"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 03 Поджелудочная железа -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="03" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Поджелудочная железа" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="6 показателей" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ГОЛОВКА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="24 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ТЕЛО" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 93%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="16 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ХВОСТ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 93%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="22 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНТУРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Ровные, чёткие"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭХОГЕННОСТЬ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 92%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Повышена, диффузно"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ВИРСУНГОВ ПРОТОК" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не расширен"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 04 Селезёнка -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="04" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Селезёнка" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="4 показателя" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="4 / 4" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="РАЗМЕРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="104 × 46 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНТУРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Ровные, чёткие"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭХОСТРУКТУРА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 97%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Однородная"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭХОГЕННОСТЬ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Средняя"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 05 Почки -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="05" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Почки" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="6 показателей" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ПРАВАЯ ПОЧКА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="108 × 47 мм, паренхима 16 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЛЕВАЯ ПОЧКА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="112 × 49 мм, паренхима 17 мм"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЧАШЕЧНО-ЛОХАНОЧНАЯ СИСТЕМА" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 97%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не расширена с обеих сторон"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНКРЕМЕНТЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 98%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не выявлены"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КОНТУРЫ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Ровные, чёткие"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="КРОВОТОК" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Симметричный, магистральный"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 06 Заключение -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="06" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Заключение" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="формулируется на основе показателей" FontSize="9"
+                                                   Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="Сформировано" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <StackPanel Margin="13,13,13,8">
+                                <Border Style="{StaticResource FieldCell}" Margin="5">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,5">
+                                            <TextBlock Text="ЗАКЛЮЧЕНИЕ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Сформировано на основе распознанных показателей"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource TextAreaInput}" MinHeight="46"
+                                                 Text="Эхо-признаки диффузных изменений поджелудочной железы (повышение эхогенности). Очаговой патологии органов брюшной полости не выявлено."/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}" Margin="5">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,5">
+                                            <TextBlock Text="РЕКОМЕНДАЦИИ" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 93%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource TextAreaInput}" MinHeight="28"
+                                                 Text="Контроль УЗИ через 6 месяцев. Консультация гастроэнтеролога по клиническим показаниям."/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Протокол сохраняется в локальное хранилище. Передача данных во внешние сервисы не выполняется."
+                               FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="2,4,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ====================  ПРАВАЯ ПАНЕЛЬ  ==================== -->
+            <Border Grid.Row="1" Grid.Column="2"
+                    Background="{DynamicResource RailBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0">
+                <ScrollViewer Style="{StaticResource CleanScrollViewer}" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="16,18,12,20">
+
+                        <!-- Распознавание -->
+                        <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="28" Height="28" CornerRadius="8" Background="{DynamicResource AccentSoftBrush}">
+                                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE720;" FontSize="12"
+                                                       Foreground="{DynamicResource AccentBrush}"/>
+                                        </Border>
+                                        <StackPanel Margin="9,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="Распознавание" FontSize="12.5" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource InkBrush}"/>
+                                            <TextBlock Text="Compact · локальная модель" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Border x:Name="RecognitionPill" Style="{StaticResource PillAccent}" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse x:Name="RecognitionDot" Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}"
+                                                     VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                            <TextBlock x:Name="RecognitionStatusText" Text="Готово" Style="{StaticResource PillTextAccent}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Border Style="{StaticResource Divider}" Margin="0,11,0,9"/>
+
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Язык" FontSize="10.5" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock Text="Русский (ru-RU)" FontSize="10.5" Foreground="{DynamicResource InkBrush}"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,10">
+                                    <TextBlock Text="Режим" FontSize="10.5" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock Text="Офлайн · на устройстве" FontSize="10.5" Foreground="{DynamicResource InkBrush}"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+
+                                <Grid>
+                                    <TextBlock Text="Уровень сигнала" FontSize="10" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock x:Name="LevelValueText" Text="−32 дБ" FontSize="10" Foreground="{DynamicResource InkBrush}"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Grid Height="3" Margin="0,6,0,0">
+                                    <Border Background="{DynamicResource TrackBrush}" CornerRadius="1.5"/>
+                                    <Border x:Name="LevelFill" Width="96" Background="{DynamicResource AccentBrush}"
+                                            CornerRadius="1.5" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Транскрипт -->
+                        <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ТРАНСКРИПТ" Style="{StaticResource Caption}" VerticalAlignment="Center"/>
+                                        <Border Style="{StaticResource Pill}" Padding="6,1" Margin="7,0,0,0">
+                                            <TextBlock Text="12" Style="{StaticResource PillText}" FontSize="9"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource LinkButton}" Content="Показать всё" HorizontalAlignment="Right"
+                                            Click="ShowAllTranscript_Click"/>
+                                </Grid>
+
+                                <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                <StackPanel Margin="0,9,0,0">
+                                    <Grid>
+                                        <TextBlock Text="12:04:18" FontFamily="{StaticResource MonoFont}" FontSize="8.5"
+                                                   Foreground="{DynamicResource FaintBrush}"/>
+                                        <TextBlock Text="97%" FontSize="8.5" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <TextBlock Text="«Печень не увеличена, контуры ровные, эхогенность средняя»"
+                                               FontSize="11.5" Foreground="{DynamicResource InkSoftBrush}" TextWrapping="Wrap"
+                                               LineHeight="16.5" Margin="0,3,0,0"/>
+                                    <TextBlock Text="→ Печень · 3 поля" FontSize="9.5" Foreground="{DynamicResource AccentBrush}" Margin="0,4,0,0"/>
+
+                                    <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                    <Grid Margin="0,9,0,0">
+                                        <TextBlock Text="12:04:26" FontFamily="{StaticResource MonoFont}" FontSize="8.5"
+                                                   Foreground="{DynamicResource FaintBrush}"/>
+                                        <TextBlock Text="94%" FontSize="8.5" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <TextBlock Text="«Жёлчный пузырь грушевидной формы, стенка два миллиметра, содержимое однородное»"
+                                               FontSize="11.5" Foreground="{DynamicResource InkSoftBrush}" TextWrapping="Wrap"
+                                               LineHeight="16.5" Margin="0,3,0,0"/>
+                                    <TextBlock Text="→ Жёлчный пузырь · 3 поля" FontSize="9.5" Foreground="{DynamicResource AccentBrush}" Margin="0,4,0,0"/>
+
+                                    <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                    <Grid Margin="0,9,0,0">
+                                        <TextBlock Text="12:04:33" FontFamily="{StaticResource MonoFont}" FontSize="8.5"
+                                                   Foreground="{DynamicResource FaintBrush}"/>
+                                        <TextBlock Text="88%" FontSize="8.5" Foreground="{DynamicResource AmberBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <TextBlock Text="«Холедох четыре миллиметра»" FontSize="11.5" Foreground="{DynamicResource InkSoftBrush}"
+                                               TextWrapping="Wrap" LineHeight="16.5" Margin="0,3,0,0"/>
+                                    <TextBlock Text="→ Холедох · 1 поле" FontSize="9.5" Foreground="{DynamicResource AmberBrush}" Margin="0,4,0,0"/>
+
+                                    <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                    <Grid Margin="0,9,0,0">
+                                        <TextBlock Text="12:04:41" FontFamily="{StaticResource MonoFont}" FontSize="8.5"
+                                                   Foreground="{DynamicResource FaintBrush}"/>
+                                        <TextBlock Text="92%" FontSize="8.5" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                    <TextBlock Text="«Поджелудочная: головка двадцать четыре, тело шестнадцать, хвост двадцать два»"
+                                               FontSize="11.5" Foreground="{DynamicResource InkSoftBrush}" TextWrapping="Wrap"
+                                               LineHeight="16.5" Margin="0,3,0,0"/>
+                                    <TextBlock Text="→ Поджелудочная железа · 3 поля" FontSize="9.5" Foreground="{DynamicResource AccentBrush}" Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Требует проверки -->
+                        <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="ТРЕБУЕТ ПРОВЕРКИ" Style="{StaticResource Caption}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Border Style="{StaticResource PillAmber}" HorizontalAlignment="Right" Padding="7,1">
+                                        <TextBlock Text="2" Style="{StaticResource PillTextAmber}" FontSize="9"/>
+                                    </Border>
+                                </Grid>
+
+                                <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                <Border BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1" Padding="0,9">
+                                    <Grid>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBlock Text="Холедох" FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource InkBrush}"/>
+                                            </StackPanel>
+                                            <TextBlock Text="4 мм · уверенность 88%" FontSize="9.5" Foreground="{DynamicResource MutedBrush}" Margin="11,2,0,0"/>
+                                        </StackPanel>
+                                        <Button Style="{StaticResource LinkButton}" Content="Перейти" VerticalAlignment="Center"
+                                                HorizontalAlignment="Right" Click="FocusField_Click" Tag="CholedochInput"/>
+                                    </Grid>
+                                </Border>
+
+                                <Grid Margin="0,9,0,0">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource AmberBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBlock Text="Стенка жёлчного пузыря" FontSize="11.5" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource InkBrush}"/>
+                                        </StackPanel>
+                                        <TextBlock Text="2 мм · уверенность 90%" FontSize="9.5" Foreground="{DynamicResource MutedBrush}" Margin="11,2,0,0"/>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource LinkButton}" Content="Перейти" VerticalAlignment="Center"
+                                            HorizontalAlignment="Right" Click="FocusField_Click" Tag="GallbladderWallInput"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Команды -->
+                        <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="ГОЛОСОВЫЕ КОМАНДЫ" Style="{StaticResource Caption}" VerticalAlignment="Center"/>
+                                    <Button Style="{StaticResource LinkButton}" Content="Настроить" HorizontalAlignment="Right"
+                                            Click="Stub_Click" Tag="Настройка голосовых команд"/>
+                                </Grid>
+
+                                <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
+
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,9">
+                                        <Border Style="{StaticResource Keycap}"><TextBlock Text="F9" Style="{StaticResource KeycapText}"/></Border>
+                                        <TextBlock Text="начать запись" FontSize="9.5" Foreground="{DynamicResource MutedBrush}"
+                                                   Margin="7,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,9">
+                                        <Border Style="{StaticResource Keycap}"><TextBlock Text="Esc" Style="{StaticResource KeycapText}"/></Border>
+                                        <TextBlock Text="остановить" FontSize="9.5" Foreground="{DynamicResource MutedBrush}"
+                                                   Margin="7,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                        <Border Style="{StaticResource Keycap}"><TextBlock Text="Tab" Style="{StaticResource KeycapText}"/></Border>
+                                        <TextBlock Text="следующее поле" FontSize="9.5" Foreground="{DynamicResource MutedBrush}"
+                                                   Margin="7,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <Border Style="{StaticResource Keycap}"><TextBlock Text="сброс" Style="{StaticResource KeycapText}"/></Border>
+                                        <TextBlock Text="очистить поле" FontSize="9.5" Foreground="{DynamicResource MutedBrush}"
+                                                   Margin="7,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="Команды произносятся во время диктовки без остановки записи."
+                                           FontSize="9" Foreground="{DynamicResource FaintBrush}" TextWrapping="Wrap" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- ====================  НИЖНЯЯ ПАНЕЛЬ ДЕЙСТВИЙ  ==================== -->
+            <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource TopBarBrush}"
+                    BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0" Padding="26,0,20,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="6" Height="6" Fill="{DynamicResource GreenDotBrush}" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                        <TextBlock Text="Черновик сохранён локально" FontSize="10" Foreground="{DynamicResource MutedBrush}"/>
+                        <Border Width="1" Height="18" Background="{DynamicResource LineBrush}" Margin="14,0"/>
+                        <TextBlock Text="Проверено 28 из 30 полей" FontSize="10" Foreground="{DynamicResource InkSoftBrush}"/>
+                        <Grid Width="90" Height="3" Margin="9,0,0,0" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource TrackBrush}" CornerRadius="1.5"/>
+                            <Border Width="80" Background="{DynamicResource AccentBrush}" CornerRadius="1.5" HorizontalAlignment="Left"/>
+                        </Grid>
+                        <TextBlock Text="93%" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="7,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button Style="{StaticResource GhostButton}" Height="34" Click="Preview_Click" Margin="0,0,6,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE8A5;" FontSize="11" Margin="0,0,6,0"/>
+                                <TextBlock Text="Предпросмотр" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SecondaryButton}" Height="34" Content="Сохранить черновик"
+                                Click="Save_Click" Margin="0,0,8,0" ToolTip="Сохранить черновик (Ctrl+S)"/>
+                        <Button Style="{StaticResource PrimaryButton}" Height="34" Click="Finish_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="10" Margin="0,0,7,0"/>
+                                <TextBlock Text="Завершить протокол" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
