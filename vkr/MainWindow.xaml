@@ -439,9 +439,9 @@
                                     </Border>
                                     <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Иванова Анна Сергеевна" FontSize="15.5" FontWeight="SemiBold"
+                                            <TextBlock Text="Иванов Алексей Сергеевич" FontSize="15.5" FontWeight="SemiBold"
                                                        Foreground="{DynamicResource InkBrush}"/>
-                                            <TextBlock Text="68 лет · женский" FontSize="10.5" Foreground="{DynamicResource MutedBrush}"
+                                            <TextBlock Text="68 лет · мужской" FontSize="10.5" Foreground="{DynamicResource MutedBrush}"
                                                        Margin="10,0,0,0" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock Text="Плановое эхокардиографическое исследование · направление № 0417-11"
@@ -511,10 +511,11 @@
                                 </Border>
                             </Grid>
 
-                            <Border Style="{StaticResource Divider}" Margin="0,11,0,10"/>
+                                                        <Border Style="{StaticResource Divider}" Margin="0,11,0,10"/>
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -541,6 +542,12 @@
                                     <StackPanel>
                                         <TextBlock Text="ППТ" Style="{StaticResource MetaLabel}"/>
                                         <TextBlock Text="2,13 м²" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="4" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1,0,0,0" Padding="14,0,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="ЧСС" Style="{StaticResource MetaLabel}"/>
+                                        <TextBlock Text="—" Style="{StaticResource MetaValue}" Margin="0,3,0,0"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -668,7 +675,7 @@
                     <Grid Margin="2,0,2,9">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="СТРУКТУРА ПРОТОКОЛА" Style="{StaticResource Caption}"/>
-                            <TextBlock Text="9 разделов · 94 показателя" FontSize="9.5"
+                            <TextBlock Text="14 разделов · 176 показателей" FontSize="9.5"
                                        Foreground="{DynamicResource FaintBrush}" Margin="9,0,0,0"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -692,14 +699,14 @@
                                     </Border>
                                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Левый желудочек" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="Размеры, объёмы и систолическая функция" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="Размеры, объёмы, индексы и систолическая функция" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
                                                    Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="10 / 10" Style="{StaticResource PillTextAccent}"/>
+                                        <TextBlock Text="14 / 14" Style="{StaticResource PillTextAccent}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -748,6 +755,15 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Индекс КДР, мм/м²" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="23"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
                                             <TextBlock Text="Индекс КДО, мл/м²" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
@@ -768,7 +784,52 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="ФВ, %" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="Дилатация по КДР" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дилатация по КСР" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дилатация по КДО" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дилатация по КСО" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ФВ, М режим, %" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ФВ, В режим (Simpson), %" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 99%"/>
                                         </Grid>
@@ -785,6 +846,36 @@
                                         <TextBox Style="{StaticResource FieldInput}" Text="75"/>
                                     </StackPanel>
                                 </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 02 Миокард -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="02" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Миокард" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="Толщины, масса, ремоделирование и структура" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="14 / 14" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
@@ -805,36 +896,42 @@
                                         <TextBox Style="{StaticResource FieldInput}" Text="14"/>
                                     </StackPanel>
                                 </Border>
-                            </UniformGrid>
-                        </StackPanel>
-                    </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="МЖП: склероз" Style="{StaticResource FieldLabel}"/>
 
-                    <!-- 02 Миокард -->
-                    <Border Style="{StaticResource SectionCard}">
-                        <StackPanel>
-                            <Grid Margin="18,12,16,11">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
-                                            VerticalAlignment="Center">
-                                        <TextBlock Text="02" FontFamily="{StaticResource MonoFont}" FontSize="10"
-                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="Миокард" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="Масса, ремоделирование и деформация" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
-                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
                                     </StackPanel>
                                 </Border>
-                            </Grid>
-                            <Border Style="{StaticResource Divider}"/>
-                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЗСЛЖ: склероз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="МЖП: гипертрофия" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="умерен"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЗСЛЖ: гипертрофия" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="умерен"/>
+                                    </StackPanel>
+                                </Border>
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
@@ -848,11 +945,20 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Масса миокарда, г" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="Масса миокарда (М режим), г" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
                                         </Grid>
                                         <TextBox Style="{StaticResource FieldInput}" Text="313"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Масса миокарда (В режим), г" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
@@ -863,6 +969,24 @@
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 93%"/>
                                         </Grid>
                                         <TextBox Style="{StaticResource FieldInput}" Text="71,3"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Индекс массы (стандартизованный), г/м²" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="146,9"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Ед. изм. индекса массы" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="г/м²·⁷"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
@@ -885,15 +1009,6 @@
                                         <TextBox Style="{StaticResource FieldInput}" Text="Однородная, без очаговых изменений"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Style="{StaticResource FieldCell}">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="GLS, %" Style="{StaticResource FieldLabel}"/>
-
-                                        </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="Не исследовано"/>
-                                    </StackPanel>
-                                </Border>
                             </UniformGrid>
                         </StackPanel>
                     </Border>
@@ -911,14 +1026,14 @@
                                     </Border>
                                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Сократимость" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="Кинез, асинергия, тромб и аневризма" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="Функция, кинез, асинергия, тромб и аневризма" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
                                                    Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                        <TextBlock Text="7 / 7" Style="{StaticResource PillTextAccent}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -984,6 +1099,15 @@
                                         <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
                                     </StackPanel>
                                 </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дополнительная хорда" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
                             </UniformGrid>
                         </StackPanel>
                     </Border>
@@ -1001,14 +1125,14 @@
                                     </Border>
                                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Аорта и лёгочная артерия" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="Диаметр, индексы и давление в лёгочной артерии" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="Диаметр, отделы, индексы и давление" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
                                                    Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="8 / 8" Style="{StaticResource PillTextAccent}"/>
+                                        <TextBlock Text="12 / 12" Style="{StaticResource PillTextAccent}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -1042,6 +1166,33 @@
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
                                         </Grid>
                                         <TextBox Style="{StaticResource FieldInput}" Text="40"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дуга аорты, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Нисходящий отдел, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Брюшной отдел, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
@@ -1087,6 +1238,15 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дилатация ЛА" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
                                             <TextBlock Text="СДЛА, мм рт. ст." Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 92%"/>
@@ -1118,7 +1278,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
                                                    Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="10 / 10" Style="{StaticResource PillTextAccent}"/>
+                                        <TextBlock Text="17 / 17" Style="{StaticResource PillTextAccent}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -1147,6 +1307,15 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Индекс размера ЛП, мм/м²" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="23"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
                                             <TextBlock Text="Индекс объёма ЛП, мл/м²" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
@@ -1167,7 +1336,16 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="ПП, мл" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="ПП, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Объём ПП, мл" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
                                         </Grid>
@@ -1177,31 +1355,20 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Индекс ПП, мл/м²" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="Индекс размера ПП, мм/м²" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Индекс объёма ПП, мл/м²" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
                                         </Grid>
                                         <TextBox Style="{StaticResource FieldInput}" Text="26,3"/>
-                                    </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource FieldCell}">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="ПЖ, мм" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
-                                        </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="33"/>
-                                    </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource FieldCell}">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Индекс ПЖ, мм/м²" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
-                                        </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="15,5"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
@@ -1217,10 +1384,66 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="LASr, %" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="ПЖ, мм" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 96%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="33"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Объём ПЖ, мл" Style="{StaticResource FieldLabel}"/>
 
                                         </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="Не исследовано"/>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Индекс ПЖ, мм/м²" Style="{StaticResource FieldLabel}"/>
+                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 94%"/>
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="15,5"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Дилатация ПЖ" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Гипертрофия ПЖ" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Гипертрофия ПЖ (качественно)" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Гипертрофия ПЖ (количественно), мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
                                     </StackPanel>
                                 </Border>
                             </UniformGrid>
@@ -1252,6 +1475,15 @@
                             </Grid>
                             <Border Style="{StaticResource Divider}"/>
                             <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Диастолическая функция оценена" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Да"/>
+                                    </StackPanel>
+                                </Border>
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
@@ -1324,7 +1556,25 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Диастолическая функция" Style="{StaticResource FieldLabel}"/>
+                                            <TextBlock Text="Скорость ТР, м/с" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="S/D" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Заключение по диастолической функции" Style="{StaticResource FieldLabel}"/>
                                             <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center" ToolTip="Распознано · уверенность 93%"/>
                                         </Grid>
@@ -1348,7 +1598,7 @@
                                     </Border>
                                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Клапаны" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="4 клапана · 10 параметров" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="4 клапана · 11 параметров" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <Border Style="{StaticResource PillAmber}" HorizontalAlignment="Right">
@@ -1368,6 +1618,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
@@ -1405,10 +1656,10 @@
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="есть"/>
                                 </Border>
                                 <Border Grid.Row="1" Grid.Column="3" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="есть"/>
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="1" Grid.Column="4" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="есть"/>
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource ValveLabelCell}">
                                     <TextBlock Text="Кальциноз" Style="{StaticResource ValveRowLabel}"/>
@@ -1420,10 +1671,10 @@
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="+"/>
                                 </Border>
                                 <Border Grid.Row="2" Grid.Column="3" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="+++"/>
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="2" Grid.Column="4" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="+"/>
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="3" Grid.Column="0" Style="{StaticResource ValveLabelCell}">
                                     <TextBlock Text="Дисфункция / пролапс" Style="{StaticResource ValveRowLabel}"/>
@@ -1534,10 +1785,10 @@
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="10" Grid.Column="0" Style="{StaticResource ValveLabelCell}">
-                                    <TextBlock Text="Макс. скорость, м/с" Style="{StaticResource ValveRowLabel}"/>
+                                    <TextBlock Text="PHT, мс" Style="{StaticResource ValveRowLabel}"/>
                                 </Border>
                                 <Border Grid.Row="10" Grid.Column="1" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="4,2"/>
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
                                 <Border Grid.Row="10" Grid.Column="2" Style="{StaticResource ValveValueCell}">
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
@@ -1548,14 +1799,29 @@
                                 <Border Grid.Row="10" Grid.Column="4" Style="{StaticResource ValveValueCell}">
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
                                 </Border>
+                                <Border Grid.Row="11" Grid.Column="0" Style="{StaticResource ValveLabelCell}">
+                                    <TextBlock Text="Макс. скорость, м/с" Style="{StaticResource ValveRowLabel}"/>
+                                </Border>
+                                <Border Grid.Row="11" Grid.Column="1" Style="{StaticResource ValveValueCell}">
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="4,2"/>
+                                </Border>
+                                <Border Grid.Row="11" Grid.Column="2" Style="{StaticResource ValveValueCell}">
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
+                                </Border>
+                                <Border Grid.Row="11" Grid.Column="3" Style="{StaticResource ValveValueCell}">
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
+                                </Border>
+                                <Border Grid.Row="11" Grid.Column="4" Style="{StaticResource ValveValueCell}">
+                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
+                                </Border>
                             </Grid>
-                            <TextBlock Text="Значения: есть / нет · + / ++ / +++ · степень 0–4."
+                            <TextBlock Text="Значения: есть / нет · + / ++ / +++ · степень 0–4. PHT — время полуспада давления."
                                        FontSize="8.5" Foreground="{DynamicResource FaintBrush}" Margin="16,0,16,12"/>
                         </StackPanel>
                     </Border>
 
 
-                    <!-- 08 Дополнительные структуры -->
+                    <!-- 08 Кольца и папиллярные мышцы -->
                     <Border Style="{StaticResource SectionCard}">
                         <StackPanel>
                             <Grid Margin="18,12,16,11">
@@ -1567,15 +1833,15 @@
                                                    VerticalAlignment="Center"/>
                                     </Border>
                                     <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="Дополнительные структуры" Style="{StaticResource SectionTitle}"/>
-                                        <TextBlock Text="Фиброзные кольца и папиллярные мышцы" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="Кольца и папиллярные мышцы" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="Фиброз, кальциноз и субмитральные изменения" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
                                                    Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
-                                        <TextBlock Text="4 / 4" Style="{StaticResource PillTextAccent}"/>
+                                        <TextBlock Text="7 / 7" Style="{StaticResource PillTextAccent}"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
@@ -1584,39 +1850,164 @@
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Аортальное кольцо" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 92%"/>
+                                            <TextBlock Text="Аортальное кольцо: фиброз" Style="{StaticResource FieldLabel}"/>
+
                                         </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="Кальциноз +, фиброз"/>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Есть"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Митральное кольцо" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 91%"/>
+                                            <TextBlock Text="Аортальное кольцо: кальциноз" Style="{StaticResource FieldLabel}"/>
+
                                         </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="Субмитральный кальциноз +"/>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="+++"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Папиллярные мышцы" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 95%"/>
+                                            <TextBlock Text="Митральное кольцо: фиброз" Style="{StaticResource FieldLabel}"/>
+
                                         </Grid>
-                                        <TextBox Style="{StaticResource FieldInput}" Text="Без изменений"/>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Есть"/>
                                     </StackPanel>
                                 </Border>
                                 <Border Style="{StaticResource FieldCell}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,4">
-                                            <TextBlock Text="Дополнительные находки" Style="{StaticResource FieldLabel}"/>
-                                            <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenDotBrush}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center" ToolTip="Распознано · уверенность 90%"/>
+                                            <TextBlock Text="Митральное кольцо: кальциноз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="+"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Папиллярные мышцы: фиброз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Папиллярные мышцы: кальциноз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Субмитральный кальциноз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Есть"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 09 Перикард и сосуды -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="09" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Перикард и сосуды" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="Выпот, межпредсердный сброс и сонные артерии" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="8 / 8" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Выпот в полости перикарда" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Толщина выпота, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Локализация выпота" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сброс в проекции МПП" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ОСА справа: атеросклероз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ОСА справа: КИМ, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ОСА слева: атеросклероз" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ОСА слева: КИМ, мм" Style="{StaticResource FieldLabel}"/>
+
                                         </Grid>
                                         <TextBox Style="{StaticResource FieldInput}" Text="—"/>
                                     </StackPanel>
@@ -1625,14 +2016,494 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- 09 Заключение -->
+                    <!-- 10 Пороки -->
                     <Border Style="{StaticResource SectionCard}">
                         <StackPanel>
                             <Grid Margin="18,12,16,11">
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
                                             VerticalAlignment="Center">
-                                        <TextBlock Text="09" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                        <TextBlock Text="10" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Пороки" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="Врождённые и приобретённые, ФК и ООО" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="9 / 9" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Пороки" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Врождённые пороки" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Порок митрального клапана" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Порок аортального клапана" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Порок трикуспидального клапана" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Порок клапана ЛА" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Открытое овальное окно" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ФК аортального клапана, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ФК митрального клапана, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 11 Ресинхронизация -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="11" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Ресинхронизация" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="ЭхоКГ при CRT и межжелудочковые задержки" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="9 / 9" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="ЭхоКГ при ресинхронизирующей терапии" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Предизгнание аортальное, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Предизгнание в ЛА, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Механическая МЖ задержка, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Наполнение ЛЖ / RR" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Макс. межсегментарная задержка, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Право-лево-желудочковая задержка, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Место поздней активации" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Задержка пиков ЗСЛЖ и МЖП, мс" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 12 Деформация и индексы -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="12" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Деформация и индексы" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="GLS, LASr, TAPSE и HFA-PEFF" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="6 / 6" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="GLS рассчитан" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="GLS, %" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не исследовано"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="LASr рассчитан" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Нет"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="LASr, %" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="Не исследовано"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="TAPSE, мм" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="HFA-PEFF, баллы" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="4"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 13 Сегменты ЛЖ -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="13" FontFamily="{StaticResource MonoFont}" FontSize="10"
+                                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Сегменты ЛЖ" Style="{StaticResource SectionTitle}"/>
+                                        <TextBlock Text="16 сегментов · локальная сократимость" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Style="{StaticResource PillAccent}" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Glyph}" Text="&#xE73E;" FontSize="8"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,4,0"/>
+                                        <TextBlock Text="16 / 16" Style="{StaticResource PillTextAccent}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <UniformGrid Columns="2" Margin="13,13,13,3">
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 1" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 2" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 3" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 4" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 5" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 6" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 7" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 8" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 9" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 10" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 11" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 12" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 13" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 14" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 15" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource FieldCell}">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="Сегмент 16" Style="{StaticResource FieldLabel}"/>
+
+                                        </Grid>
+                                        <TextBox Style="{StaticResource FieldInput}" Text="—"/>
+                                    </StackPanel>
+                                </Border>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 14 Заключение -->
+                    <Border Style="{StaticResource SectionCard}">
+                        <StackPanel>
+                            <Grid Margin="18,12,16,11">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="27" Height="27" CornerRadius="7" Background="{DynamicResource AccentTintBrush}"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="14" FontFamily="{StaticResource MonoFont}" FontSize="10"
                                                    Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
@@ -1903,12 +2774,12 @@
                         <Ellipse Width="6" Height="6" Fill="{DynamicResource GreenDotBrush}" VerticalAlignment="Center" Margin="0,0,7,0"/>
                         <TextBlock Text="Черновик сохранён локально" FontSize="10" Foreground="{DynamicResource MutedBrush}"/>
                         <Border Width="1" Height="18" Background="{DynamicResource LineBrush}" Margin="14,0"/>
-                        <TextBlock Text="Проверено 92 из 94 полей" FontSize="10" Foreground="{DynamicResource InkSoftBrush}"/>
+                        <TextBlock Text="Проверено 174 из 176 полей" FontSize="10" Foreground="{DynamicResource InkSoftBrush}"/>
                         <Grid Width="90" Height="3" Margin="9,0,0,0" VerticalAlignment="Center">
                             <Border Background="{DynamicResource TrackBrush}" CornerRadius="1.5"/>
-                            <Border Width="88" Background="{DynamicResource AccentBrush}" CornerRadius="1.5" HorizontalAlignment="Left"/>
+                            <Border Width="89" Background="{DynamicResource AccentBrush}" CornerRadius="1.5" HorizontalAlignment="Left"/>
                         </Grid>
-                        <TextBlock Text="98%" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="7,0,0,0"/>
+                        <TextBlock Text="99%" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="7,0,0,0"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
