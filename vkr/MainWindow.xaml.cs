@@ -314,7 +314,7 @@ namespace vkr
             _waveTimer.Start();
 
             DictationTitle.Text = "Идёт запись";
-            DictationHint.Text = "Говорите естественно — фрагменты будут появляться в журнале распознавания";
+            DictationHint.Text = "Говорите естественно — измерения распределятся по карточкам протокола";
 
             RecordCircle.Background = RecordActiveCircle;
             RecordGlyph.Text = "\uE71A";
@@ -406,7 +406,7 @@ namespace vkr
 
             RecordTimerText.Text = "00:00";
             DictationTitle.Text = "Готов к записи";
-            DictationHint.Text = "Нажмите F9 или круглую кнопку, чтобы начать";
+            DictationHint.Text = "Нажмите F9 и назовите показатели: «аорта 37, ФВ 65, E/A 0,7»";
 
             RecordCircle.Background = RecordIdleCircle;
             RecordGlyph.Text = "\uE720";
@@ -539,6 +539,14 @@ namespace vkr
             ShowStub("Выбор модели распознавания",
                 "Здесь будет выполняться выбор локальной модели распознавания речи. В полной версии можно будет переключаться между быстрой, точной и медицинской моделями — без передачи аудио в сеть.",
                 "Доступные модели: Compact · Precision · Medical.");
+
+        private void OrganSoon_Click(object sender, RoutedEventArgs e)
+        {
+            var organ = (sender as FrameworkElement)?.Tag as string ?? "Этот орган";
+            ShowStub("Орган пока недоступен",
+                $"Протокол для области «{organ}» появится в следующих версиях. Сейчас в программе реализован только анализ сердца.",
+                "Один протокол — один орган. Модуль находится в разработке.");
+        }
 
         private void ShowAllTranscript_Click(object sender, RoutedEventArgs e) =>
             ShowStub("Полный транскрипт",
