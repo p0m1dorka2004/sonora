@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# SONORA local build and tool artifacts
+.gigatool/
+*.obj
+vkr/native/build/
+vkr/native/whisper.cpp/

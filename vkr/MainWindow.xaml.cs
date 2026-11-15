@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -7,7 +10,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Microsoft.Win32;
 using vkr.Dialogs;
+using vkr.Services;
 using vkr.Themes;
 
 namespace vkr
@@ -35,6 +40,15 @@ namespace vkr
         private bool _syncingTheme;
         private Rect _restoreBounds;
 
+        private readonly NativeWhisperService _whisper = new();
+        private readonly GigaAmService _gigaAm = new();
+        private readonly GigaAmRnntService _gigaAmRnnt = new();
+        private RecognitionEngine _engine = RecognitionEngine.WhisperCpp;
+        private CancellationTokenSource? _transcriptionCts;
+        private bool _isTranscribing;
+        private DateTime _processingStarted;
+        private string _lastTranscriptText = string.Empty;
+
         private static readonly Brush RecordIdleCircle = Freeze(Color.FromRgb(0xF5, 0xF2, 0xE9));
         private static readonly Brush RecordActiveCircle = Freeze(Color.FromRgb(0xC4, 0x45, 0x3C));
         private static readonly Brush RecordProcessingCircle = Freeze(Color.FromRgb(0x2A, 0x4A, 0x42));
@@ -51,6 +65,7 @@ namespace vkr
         {
             InitializeComponent();
             BuildWaveform();
+            UpdateModelUi();
 
             _recordTimer.Tick += (_, _) => UpdateTimerText();
             _waveTimer.Tick += (_, _) => UpdateWaveform();
@@ -59,7 +74,14 @@ namespace vkr
             ThemeToggle.Checked += ThemeToggle_Changed;
             ThemeToggle.Unchecked += ThemeToggle_Changed;
             ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-            Closed += (_, _) => ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+            Closed += (_, _) =>
+            {
+                ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+                _transcriptionCts?.Cancel();
+                _whisper.Dispose();
+                _gigaAm.Dispose();
+                _gigaAmRnnt.Dispose();
+            };
 
             Loaded += (_, _) =>
             {
@@ -274,13 +296,18 @@ namespace vkr
 
         private void UpdateTimerText()
         {
-            if (_state != RecordingState.Recording)
+            if (_state == RecordingState.Recording)
             {
+                var elapsed = DateTime.Now - _recordingStarted;
+                RecordTimerText.Text = $"{(int)elapsed.TotalMinutes:00}:{elapsed.Seconds:00}";
                 return;
             }
 
-            var elapsed = DateTime.Now - _recordingStarted;
-            RecordTimerText.Text = $"{(int)elapsed.TotalMinutes:00}:{elapsed.Seconds:00}";
+            if (_state == RecordingState.Processing && _processingStarted != default)
+            {
+                var elapsed = DateTime.Now - _processingStarted;
+                RecordTimerText.Text = $"{(int)elapsed.TotalMinutes:00}:{elapsed.Seconds:00}";
+            }
         }
 
         // =====================  Запись  =====================
@@ -381,9 +408,9 @@ namespace vkr
 
             StubDialog.Present(
                 this,
-                "Распознавание речи",
-                "Запись остановлена. В полной версии приложения аудио будет преобразовано в текст, а значения — распределены по соответствующим полям протокола.",
-                "Модуль распознавания не подключён в прототипе интерфейса.");
+                "Микрофон пока не подключён",
+                "Запись с микрофона появится позже. Сейчас распознавание можно проверить на готовом аудиофайле.",
+                "Нажмите «Распознать аудиофайл» — локальная модель Whisper Small уже работает.");
         }
 
         private void StopRecordAnimations()
@@ -483,6 +510,11 @@ namespace vkr
                 ToggleRecording();
                 e.Handled = true;
             }
+            else if (e.Key == Key.Escape && _isTranscribing)
+            {
+                _transcriptionCts?.Cancel();
+                e.Handled = true;
+            }
             else if (e.Key == Key.Escape && _state == RecordingState.Recording)
             {
                 _ = StopAndProcessAsync();
@@ -535,10 +567,348 @@ namespace vkr
             ShowStub("Предпросмотр протокола",
                 "Здесь появится документ в том виде, в котором он будет сохранён или напечатан.");
 
-        private void ModelSelect_Click(object sender, RoutedEventArgs e) =>
-            ShowStub("Выбор модели распознавания",
-                "Здесь будет выполняться выбор локальной модели распознавания речи. В полной версии можно будет переключаться между быстрой, точной и медицинской моделями — без передачи аудио в сеть.",
-                "Доступные модели: Compact · Precision · Medical.");
+        private void ModelSelect_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isTranscribing)
+            {
+                return;
+            }
+
+            var dialog = new ModelDialog(_engine) { Owner = this };
+            if (dialog.ShowDialog() == true)
+            {
+                _engine = dialog.SelectedEngine;
+                UpdateModelUi();
+            }
+        }
+
+        private string EngineLabel => _engine switch
+        {
+            RecognitionEngine.GigaAmV3 => "GigaAM v3",
+            RecognitionEngine.GigaAmV3Rnnt => "GigaAM v3 RNN-T",
+            _ => "Whisper Small"
+        };
+
+        private void UpdateModelUi()
+        {
+            switch (_engine)
+            {
+                case RecognitionEngine.GigaAmV3:
+                    ModelNameText.Text = "GigaAM v3";
+                    ModelInfoText.Text = "GigaAM v3 · ONNX · локально";
+                    ModelSelectButton.ToolTip = "Движок: GigaAM v3. Нажмите, чтобы изменить.";
+                    AutomationProperties.SetName(ModelSelectButton, "Модель распознавания: GigaAM v3");
+                    break;
+                case RecognitionEngine.GigaAmV3Rnnt:
+                    ModelNameText.Text = "GigaAM v3 RNN-T";
+                    ModelInfoText.Text = "GigaAM v3 RNN-T · ONNX · локально";
+                    ModelSelectButton.ToolTip = "Движок: GigaAM v3 RNN-T. Нажмите, чтобы изменить.";
+                    AutomationProperties.SetName(ModelSelectButton, "Модель распознавания: GigaAM v3 RNN-T");
+                    break;
+                default:
+                    ModelNameText.Text = "Whisper Small";
+                    ModelInfoText.Text = "Whisper Small · локально";
+                    ModelSelectButton.ToolTip = "Движок: Whisper Small. Нажмите, чтобы изменить.";
+                    AutomationProperties.SetName(ModelSelectButton, "Модель распознавания: Whisper Small");
+                    break;
+            }
+        }
+
+        // =====================  Локальное распознавание  =====================
+
+        private async void TranscribeFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isTranscribing || _state == RecordingState.Recording)
+            {
+                return;
+            }
+
+            if (_engine == RecognitionEngine.WhisperCpp && !_whisper.IsModelAvailable)
+            {
+                ShowStub("Модель не найдена",
+                    $"Не найден файл модели:\n{_whisper.ModelPath}",
+                    "Поместите ggml-small.bin в папку models рядом с приложением.");
+                return;
+            }
+
+            if (_engine == RecognitionEngine.GigaAmV3 && !_gigaAm.IsAvailable)
+            {
+                ShowStub("GigaAM не настроена",
+                    "Не найдены модель, препроцессор или словарь GigaAM.",
+                    "Ожидается папка models\\gigaam рядом с приложением.");
+                return;
+            }
+
+            if (_engine == RecognitionEngine.GigaAmV3Rnnt && !_gigaAmRnnt.IsAvailable)
+            {
+                ShowStub("GigaAM RNN-T не настроена",
+                    "Не найдены модели RNN-T, препроцессор или словарь.",
+                    "Ожидается папка models\\gigaam-rnnt рядом с приложением.");
+                return;
+            }
+
+            var dialog = new OpenFileDialog
+            {
+                Title = "Выберите аудиофайл",
+                Filter = "Аудиофайлы|*.wav;*.mp3;*.flac|Все файлы|*.*",
+                CheckFileExists = true
+            };
+
+            if (dialog.ShowDialog(this) == true)
+            {
+                await TranscribeFileAsync(dialog.FileName);
+            }
+        }
+
+        private async Task TranscribeFileAsync(string audioPath)
+        {
+            _isTranscribing = true;
+            _state = RecordingState.Processing;
+            _processingStarted = DateTime.Now;
+            _transcriptionCts = new CancellationTokenSource();
+            _recordTimer.Start();
+            _waveTimer.Start();
+
+            DictationTitle.Text = "Распознаю аудиофайл";
+            DictationHint.Text = $"{System.IO.Path.GetFileName(audioPath)} · загрузка локальной модели…";
+            RecordTimerText.Text = "00:00";
+            RecognitionStatusText.Text = "Загрузка";
+            ApplyRecognitionPill(RecordingState.Processing);
+
+            RecordButton.IsEnabled = false;
+            TranscribeFileButton.IsEnabled = false;
+            ModelSelectButton.IsEnabled = false;
+
+            StopRecordAnimations();
+            LiveDot.Fill = (Brush)FindResource("AmberBrush");
+            LiveDot.Opacity = 1;
+
+            TranscriptDynamic.Children.Clear();
+            TranscriptDynamic.Visibility = Visibility.Visible;
+            TranscriptStatic.Visibility = Visibility.Collapsed;
+            TranscriptCountText.Text = "0";
+            _lastTranscriptText = string.Empty;
+
+            RecognitionStatusText.Text = "Обработка";
+            DictationHint.Text = $"{System.IO.Path.GetFileName(audioPath)} · {EngineLabel}" +
+                                 (_engine is RecognitionEngine.GigaAmV3 or RecognitionEngine.GigaAmV3Rnnt ? " · ONNX" : string.Empty);
+
+            try
+            {
+                var result = await Task.Run(
+                    () => _engine switch
+                    {
+                        RecognitionEngine.GigaAmV3 => _gigaAm.Transcribe(audioPath),
+                        RecognitionEngine.GigaAmV3Rnnt => _gigaAmRnnt.Transcribe(audioPath),
+                        _ => _whisper.Transcribe(audioPath)
+                    },
+                    _transcriptionCts.Token);
+
+                foreach (var segment in result.Segments)
+                {
+                    AppendTranscriptSegment(segment);
+                }
+
+                _lastTranscriptText = result.Text;
+
+                if (result.Segments.Count == 0 || string.IsNullOrWhiteSpace(result.Text))
+                {
+                    RecognitionStatusText.Text = "Нет речи";
+                    DictationTitle.Text = "Речь не найдена";
+                    DictationHint.Text = "В файле не удалось выделить речь. Попробуйте другой файл.";
+                    ApplyRecognitionPill(RecordingState.Processing);
+                    return;
+                }
+
+                var filled = ApplyRecognizedValues(result.Text);
+                var duration = result.AudioDuration;
+                RecordTimerText.Text = $"{(int)duration.TotalMinutes:00}:{duration.Seconds:00}";
+                DictationTitle.Text = "Файл распознан";
+                DictationHint.Text =
+                    $"{System.IO.Path.GetFileName(audioPath)} · {duration:mm\\:ss} · {result.Segments.Count} фрагментов · заполнено полей: {filled}";
+                RecognitionStatusText.Text = "Готово";
+                ApplyRecognitionPill(RecordingState.Idle);
+            }
+            catch (OperationCanceledException)
+            {
+                RecognitionStatusText.Text = "Отменено";
+                DictationTitle.Text = "Распознавание отменено";
+                DictationHint.Text = "Можно выбрать другой аудиофайл.";
+                ApplyRecognitionPill(RecordingState.Idle);
+            }
+            catch (Exception ex)
+            {
+                RecognitionStatusText.Text = "Ошибка";
+                DictationTitle.Text = "Не удалось распознать";
+                DictationHint.Text = "Проверьте аудиофайл и локальную модель.";
+                ApplyRecognitionPill(RecordingState.Processing);
+                ShowStub("Ошибка распознавания", ex.Message,
+                    "Локальные движки работают офлайн. Проверьте модель whisper.cpp и окружение GigaAM.");
+            }
+            finally
+            {
+                _transcriptionCts?.Dispose();
+                _transcriptionCts = null;
+                _isTranscribing = false;
+                _state = RecordingState.Idle;
+                _recordTimer.Stop();
+                _waveTimer.Stop();
+
+                RecordButton.IsEnabled = true;
+                TranscribeFileButton.IsEnabled = true;
+                ModelSelectButton.IsEnabled = true;
+
+                LiveDot.Fill = (Brush)FindResource("HeroFaintBrush");
+                LiveDot.Opacity = 1;
+                SetIdleWave();
+            }
+        }
+
+        private void AppendTranscriptSegment(TranscriptionSegment segment)
+        {
+            var block = new StackPanel { Margin = new Thickness(0, 9, 0, 0) };
+
+            var header = new Grid();
+            var time = new TextBlock
+            {
+                Text = segment.Start.ToString(@"mm\:ss"),
+                FontFamily = (FontFamily)FindResource("MonoFont"),
+                FontSize = 8.5
+            };
+            time.SetResourceReference(TextBlock.ForegroundProperty, "FaintBrush");
+
+            var confidence = new TextBlock
+            {
+                Text = segment.Probability > 0 ? $"{Math.Round(segment.Probability * 100)}%" : "—",
+                FontSize = 8.5,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            confidence.SetResourceReference(
+                TextBlock.ForegroundProperty,
+                segment.Probability > 0 && segment.Probability < 0.8f ? "AmberBrush" : "AccentBrush");
+
+            header.Children.Add(time);
+            header.Children.Add(confidence);
+            block.Children.Add(header);
+
+            var text = new TextBlock
+            {
+                Text = $"«{segment.Text}»",
+                FontSize = 11.5,
+                TextWrapping = TextWrapping.Wrap,
+                LineHeight = 16.5,
+                Margin = new Thickness(0, 3, 0, 0)
+            };
+            text.SetResourceReference(TextBlock.ForegroundProperty, "InkSoftBrush");
+            block.Children.Add(text);
+
+            var divider = new Border { Height = 1, Margin = new Thickness(0, 9, 0, 0) };
+            divider.SetResourceReference(Border.BackgroundProperty, "LineBrush");
+            block.Children.Add(divider);
+
+            TranscriptDynamic.Children.Add(block);
+            TranscriptCountText.Text = TranscriptDynamic.Children.Count.ToString();
+        }
+
+        private int ApplyRecognizedValues(string text)
+        {
+            var normalized = text.ToLowerInvariant().Replace('ё', 'е');
+            var applied = 0;
+            var fieldStyle = (Style)FindResource("FieldCell");
+            var labelStyle = (Style)FindResource("FieldLabel");
+
+            string? NumberAfter(params string[] keys)
+            {
+                foreach (var key in keys)
+                {
+                    var index = normalized.IndexOf(key, StringComparison.Ordinal);
+                    if (index < 0) continue;
+
+                    var start = index + key.Length;
+                    var tail = normalized.Substring(start, Math.Min(50, normalized.Length - start));
+                    var match = Regex.Match(tail, @"(\d+(?:[.,]\d+)?)");
+                    if (match.Success) return match.Groups[1].Value.Replace('.', ',');
+                }
+
+                return null;
+            }
+
+            TextBox? FindField(string labelPrefix)
+            {
+                foreach (var border in FindVisualChildren<Border>(MainScroll))
+                {
+                    if (!ReferenceEquals(border.Style, fieldStyle)) continue;
+
+                    var label = FindVisualChildren<TextBlock>(border)
+                        .FirstOrDefault(t => ReferenceEquals(t.Style, labelStyle));
+                    if (label is null) continue;
+                    if (!label.Text.StartsWith(labelPrefix, StringComparison.OrdinalIgnoreCase)) continue;
+
+                    return FindVisualChildren<TextBox>(border).FirstOrDefault();
+                }
+
+                return null;
+            }
+
+            void SetField(string? value, string labelPrefix)
+            {
+                if (value is null) return;
+                var box = FindField(labelPrefix);
+                if (box is null) return;
+                box.Text = value;
+                applied++;
+            }
+
+            void SetNamed(string? value, string name)
+            {
+                if (value is null || FindName(name) is not TextBox box) return;
+                box.Text = value;
+                applied++;
+            }
+
+            SetField(NumberAfter("фракция выброса", "фв"), "ФВ, В режим");
+            SetField(NumberAfter("ударный объем", "уо"), "УО, мл");
+            SetField(NumberAfter("конечно-диастолический объем", "диастолический объем", "диасталлический объем", "диастоллический объем", "кдо"), "КДО, мл");
+            SetField(NumberAfter("конечно-систолический объем", "систолический объем", "ксо"), "КСО, мл");
+            SetField(NumberAfter("кдр"), "КДР / КДД");
+            SetField(NumberAfter("кср"), "КСР / КСД");
+            SetField(NumberAfter("мжп"), "МЖП, мм");
+            SetField(NumberAfter("зслж"), "ЗСЛЖ, мм");
+            SetField(NumberAfter("аорта ", "аорта,", "аорта:"), "Аорта (кольцо)");
+            SetField(NumberAfter("сдла"), "СДЛА");
+            SetNamed(NumberAfter("пиковый градиент"), "AorticPeakGradientInput");
+            SetNamed(NumberAfter("средний градиент"), "AorticMeanGradientInput");
+            var area = NumberAfter("площадь отверстия");
+            if (area == "08") area = "0,8";
+            SetNamed(area, "AorticAreaInput");
+
+            if (Regex.IsMatch(normalized, @"(?:^|\s)(?:e|е)\s*7(?:\s|$|[.,])"))
+            {
+                SetField("0,7", "E/A");
+            }
+
+            var eOverE = Regex.Match(normalized,
+                @"(?:(?:e|е)\s*(?:[/\\]|на)\s*(?:e|е)|ене|ена\s*е)[^\d]{0,12}(\d+(?:[.,]\d+)?)");
+            if (eOverE.Success) SetField(eOverE.Groups[1].Value.Replace('.', ','), "E/e'");
+
+            var eOverA = Regex.Match(normalized,
+                @"(?:(?:e|е)\s*(?:[/\\]|на)\s*(?:a|а)|ена(?!\s*е)|(?:e|е)\s*на\s*(?!(?:e|е)))[^\d]{0,12}(\d+(?:[.,]\d+)?)");
+            if (eOverA.Success) SetField(eOverA.Groups[1].Value.Replace('.', ','), "E/A");
+
+            return applied;
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject root) where T : DependencyObject
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+            {
+                var child = VisualTreeHelper.GetChild(root, i);
+                if (child is T typed) yield return typed;
+
+                foreach (var descendant in FindVisualChildren<T>(child))
+                    yield return descendant;
+            }
+        }
 
         private void OrganSoon_Click(object sender, RoutedEventArgs e)
         {
@@ -548,9 +918,22 @@ namespace vkr
                 "Один протокол — один орган. Модуль находится в разработке.");
         }
 
-        private void ShowAllTranscript_Click(object sender, RoutedEventArgs e) =>
+        private void ShowAllTranscript_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(_lastTranscriptText))
+            {
+                var text = _lastTranscriptText.Length > 1200
+                    ? _lastTranscriptText[..1200] + "…"
+                    : _lastTranscriptText;
+
+                StubDialog.Present(this, "Полный транскрипт", text,
+                    "Локальная модель Whisper Small · офлайн");
+                return;
+            }
+
             ShowStub("Полный транскрипт",
                 "Будет открыт журнал всех распознанных фрагментов с временными метками, уверенностью и привязкой к полям протокола.");
+        }
 
         private void SearchBox_KeyDown(object sender, KeyEventArgs e)
         {

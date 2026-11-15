@@ -576,8 +576,8 @@
                                                VerticalAlignment="Center"/>
                                     <Border Width="1" Height="10" Background="#26FFFFFF" Margin="10,0"/>
                                     <Button x:Name="ModelSelectButton" Style="{StaticResource HeroSelectButton}"
-                                            Click="ModelSelect_Click" ToolTip="Выбрать модель распознавания"
-                                            AutomationProperties.Name="Модель распознавания: Compact">
+                                            Click="ModelSelect_Click" ToolTip="Выбрать локальную модель"
+                                            AutomationProperties.Name="Модель распознавания: Whisper Small">
                                         <StackPanel Orientation="Horizontal">
                                             <Border Width="15" Height="15" CornerRadius="4" Background="#1FFFFFFF"
                                                     VerticalAlignment="Center">
@@ -585,7 +585,7 @@
                                                            Foreground="{DynamicResource HeroTextBrush}"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Compact" FontSize="9.5" Foreground="{DynamicResource HeroTextBrush}"
+                                            <TextBlock x:Name="ModelNameText" Text="Whisper Small" FontSize="9.5" Foreground="{DynamicResource HeroTextBrush}"
                                                        Margin="5,0,5,0" VerticalAlignment="Center"/>
                                             <TextBlock Style="{StaticResource Glyph}" Text="&#xE70D;" FontSize="7"
                                                        Foreground="{DynamicResource HeroFaintBrush}" VerticalAlignment="Center"/>
@@ -630,6 +630,18 @@
                                     <TextBlock x:Name="DictationHint" Text="Нажмите F9 и назовите показатели: «аорта 37, ФВ 65, E/A 0,7»"
                                                FontSize="11.5" Foreground="{DynamicResource HeroMutedBrush}" Margin="0,5,0,0"
                                                TextWrapping="Wrap"/>
+                                    <Button x:Name="TranscribeFileButton" Style="{StaticResource LinkButton}"
+                                            Click="TranscribeFile_Click" HorizontalAlignment="Left"
+                                            Margin="0,7,0,0" ToolTip="WAV, MP3, FLAC">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource Glyph}" Text="&#xE8D6;" FontSize="10"
+                                                       Foreground="{DynamicResource HeroTextBrush}"
+                                                       VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Распознать аудиофайл" FontSize="10.5"
+                                                       Foreground="{DynamicResource HeroTextBrush}"
+                                                       TextDecorations="Underline" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -1743,7 +1755,7 @@
                                     <TextBlock Text="Средний градиент, мм рт. ст." Style="{StaticResource ValveRowLabel}"/>
                                 </Border>
                                 <Border Grid.Row="7" Grid.Column="1" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="43"/>
+                                    <TextBox x:Name="AorticMeanGradientInput" Style="{StaticResource FieldInput}" FontSize="11" Text="43"/>
                                 </Border>
                                 <Border Grid.Row="7" Grid.Column="2" Style="{StaticResource ValveValueCell}">
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
@@ -1758,7 +1770,7 @@
                                     <TextBlock Text="Площадь отверстия, см²" Style="{StaticResource ValveRowLabel}"/>
                                 </Border>
                                 <Border Grid.Row="8" Grid.Column="1" Style="{StaticResource ValveValueCell}">
-                                    <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="0,8"/>
+                                    <TextBox x:Name="AorticAreaInput" Style="{StaticResource FieldInput}" FontSize="11" Text="0,8"/>
                                 </Border>
                                 <Border Grid.Row="8" Grid.Column="2" Style="{StaticResource ValveValueCell}">
                                     <TextBox Style="{StaticResource FieldInput}" FontSize="11" Text="—"/>
@@ -2572,7 +2584,7 @@
                                         <StackPanel Margin="9,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="Распознавание" FontSize="12.5" FontWeight="SemiBold"
                                                        Foreground="{DynamicResource InkBrush}"/>
-                                            <TextBlock Text="Compact · локальная модель" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
+                                            <TextBlock x:Name="ModelInfoText" Text="Whisper Small · локально" FontSize="9" Foreground="{DynamicResource FaintBrush}" Margin="0,1,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
                                     <Border x:Name="RecognitionPill" Style="{StaticResource PillAccent}" HorizontalAlignment="Right" VerticalAlignment="Top">
@@ -2617,7 +2629,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="ТРАНСКРИПТ" Style="{StaticResource Caption}" VerticalAlignment="Center"/>
                                         <Border Style="{StaticResource Pill}" Padding="6,1" Margin="7,0,0,0">
-                                            <TextBlock Text="12" Style="{StaticResource PillText}" FontSize="9"/>
+                                            <TextBlock x:Name="TranscriptCountText" Text="12" Style="{StaticResource PillText}" FontSize="9"/>
                                         </Border>
                                     </StackPanel>
                                     <Button Style="{StaticResource LinkButton}" Content="Показать всё" HorizontalAlignment="Right"
@@ -2626,7 +2638,7 @@
 
                                 <Border Style="{StaticResource Divider}" Margin="0,9,0,0"/>
 
-                                <StackPanel Margin="0,9,0,0">
+                                <StackPanel x:Name="TranscriptStatic" Margin="0,9,0,0">
                                     <Grid>
                                         <TextBlock Text="12:04:18" FontFamily="{StaticResource MonoFont}" FontSize="8.5"
                                                    Foreground="{DynamicResource FaintBrush}"/>
@@ -2661,6 +2673,7 @@
                                                LineHeight="16.5" Margin="0,3,0,0"/>
                                     <TextBlock Text="→ Диастола · 3 поля" FontSize="9.5" Foreground="{DynamicResource AccentBrush}" Margin="0,4,0,0"/>
                                 </StackPanel>
+                                <StackPanel x:Name="TranscriptDynamic" Margin="0,9,0,0" Visibility="Collapsed"/>
                             </StackPanel>
                         </Border>
 

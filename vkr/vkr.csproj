@@ -11,6 +11,57 @@
 
   <ItemGroup>
     <Resource Include="Assets\app.ico" />
+    <Content Include="models\ggml-small.bin" Condition="Exists('models\ggml-small.bin')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\gigaam\v3_e2e_ctc.int8.onnx" Condition="Exists('models\gigaam\v3_e2e_ctc.int8.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam\v3_e2e_ctc.int8.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam\gigaam_v3.onnx" Condition="Exists('models\gigaam\gigaam_v3.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam\gigaam_v3.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam\v3_e2e_ctc_vocab.txt" Condition="Exists('models\gigaam\v3_e2e_ctc_vocab.txt')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam\v3_e2e_ctc_vocab.txt</TargetPath>
+    </Content>
+    <Content Include="models\gigaam-rnnt\v3_e2e_rnnt_encoder.int8.onnx" Condition="Exists('models\gigaam-rnnt\v3_e2e_rnnt_encoder.int8.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam-rnnt\v3_e2e_rnnt_encoder.int8.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam-rnnt\v3_e2e_rnnt_decoder.int8.onnx" Condition="Exists('models\gigaam-rnnt\v3_e2e_rnnt_decoder.int8.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam-rnnt\v3_e2e_rnnt_decoder.int8.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam-rnnt\v3_e2e_rnnt_joint.int8.onnx" Condition="Exists('models\gigaam-rnnt\v3_e2e_rnnt_joint.int8.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam-rnnt\v3_e2e_rnnt_joint.int8.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam-rnnt\gigaam_v3.onnx" Condition="Exists('models\gigaam-rnnt\gigaam_v3.onnx')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam-rnnt\gigaam_v3.onnx</TargetPath>
+    </Content>
+    <Content Include="models\gigaam-rnnt\v3_e2e_rnnt_vocab.txt" Condition="Exists('models\gigaam-rnnt\v3_e2e_rnnt_vocab.txt')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>models\gigaam-rnnt\v3_e2e_rnnt_vocab.txt</TargetPath>
+    </Content>
+    <Content Include="native\sonora_whisper.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>sonora_whisper.dll</TargetPath>
+    </Content>
+    <Content Include="native\sonora_gigaam.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>sonora_gigaam.dll</TargetPath>
+    </Content>
+    <Content Include="native\onnxruntime\onnxruntime.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>onnxruntime.dll</TargetPath>
+    </Content>
+    <Content Include="native\onnxruntime\onnxruntime_providers_shared.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>onnxruntime_providers_shared.dll</TargetPath>
+    </Content>
   </ItemGroup>
 
 </Project>
